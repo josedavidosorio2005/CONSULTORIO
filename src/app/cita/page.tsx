@@ -9,8 +9,11 @@ export default function CitaPage() {
     fecha: '',
     hora: '',
     servicio: '',
-    comentarios: '',
+    mensaje: '',
   });
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const servicios = [
     'Fisioterapia Deportiva',
@@ -20,11 +23,58 @@ export default function CitaPage() {
     'Masaje Terapéutico',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const horasDisponibles = [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+    '12:00', '12:30', '16:00', '16:30', '17:00', '17:30',
+    '18:00', '18:30', '19:00', '19:30'
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aquí iría la lógica para enviar el formulario
-    console.log('Cita solicitada:', formData);
+    setIsSubmitting(true);
+    setMessage(null);
+    
+    try {
+      const response = await fetch('/api/citas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setMessage({ type: 'success', text: data.message });
+        setFormData({
+          nombre: '',
+          email: '',
+          telefono: '',
+          fecha: '',
+          hora: '',
+          servicio: '',
+          mensaje: '',
+        });
+      } else {
+        setMessage({ type: 'error', text: data.error || 'Error al programar la cita' });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Error de conexión. Inténtalo de nuevo.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Generar fecha mínima (hoy)
+  const today = new Date().toISOString().split('T')[0];
 
   return (
     <div className="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
@@ -45,9 +95,8 @@ export default function CitaPage() {
                 type="text"
                 name="nombre"
                 id="nombre"
-                required
-                value={formData.nombre}
-                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                required                value={formData.nombre}
+                onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -61,9 +110,8 @@ export default function CitaPage() {
                 type="email"
                 name="email"
                 id="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required                value={formData.email}
+                onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -77,9 +125,8 @@ export default function CitaPage() {
                 type="tel"
                 name="telefono"
                 id="telefono"
-                required
-                value={formData.telefono}
-                onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                required                value={formData.telefono}
+                onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -93,9 +140,9 @@ export default function CitaPage() {
                 type="date"
                 name="fecha"
                 id="fecha"
-                required
-                value={formData.fecha}
-                onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
+                required                value={formData.fecha}
+                onChange={handleChange}
+                min={today}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -109,9 +156,8 @@ export default function CitaPage() {
                 type="time"
                 name="hora"
                 id="hora"
-                required
-                value={formData.hora}
-                onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
+                required                value={formData.hora}
+                onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -124,9 +170,8 @@ export default function CitaPage() {
               <select
                 id="servicio"
                 name="servicio"
-                required
-                value={formData.servicio}
-                onChange={(e) => setFormData({ ...formData, servicio: e.target.value })}
+                required                value={formData.servicio}
+                onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
               >
                 <option value="">Selecciona un servicio</option>
@@ -137,31 +182,42 @@ export default function CitaPage() {
                 ))}
               </select>
             </div>
-          </div>
-          <div className="sm:col-span-2">
-            <label htmlFor="comentarios" className="block text-sm font-semibold leading-6 text-gray-900">
+          </div>          <div className="sm:col-span-2">
+            <label htmlFor="mensaje" className="block text-sm font-semibold leading-6 text-gray-900">
               Comentarios adicionales
             </label>
             <div className="mt-2.5">
               <textarea
-                name="comentarios"
-                id="comentarios"
+                name="mensaje"
+                id="mensaje"
                 rows={4}
-                value={formData.comentarios}
-                onChange={(e) => setFormData({ ...formData, comentarios: e.target.value })}
+                value={formData.mensaje}
+                onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                placeholder="Describe tu condición o síntomas (opcional)..."
               />
             </div>
           </div>
-        </div>
-        <div className="mt-10">
+        </div>        <div className="mt-10">
           <button
             type="submit"
-            className="block w-full rounded-md bg-blue-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            disabled={isSubmitting}
+            className="block w-full rounded-md bg-blue-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Solicitar Cita
+            {isSubmitting ? 'Enviando...' : 'Solicitar Cita'}
           </button>
         </div>
+        
+        {/* Mensaje de estado */}
+        {message && (
+          <div className={`mt-6 p-4 rounded-md ${
+            message.type === 'success' 
+              ? 'bg-green-50 text-green-800 border border-green-200' 
+              : 'bg-red-50 text-red-800 border border-red-200'
+          }`}>
+            <p className="text-sm font-medium">{message.text}</p>
+          </div>
+        )}
       </form>
     </div>
   );

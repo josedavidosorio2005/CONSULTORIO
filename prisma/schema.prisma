@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Contacto {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  email     String
+  telefono  String?
+  mensaje   String
+  leido     Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cita {
+  id           Int      @id @default(autoincrement())
+  nombre       String
+  email        String
+  telefono     String
+  servicio     String
+  fecha        DateTime
+  hora         String
+  mensaje      String?
+  estado       String   @default("PENDIENTE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Servicio {
+  id          Int     @id @default(autoincrement())
+  nombre      String
+  descripcion String
+  precio      Float
+  duracion    Int
+  activo      Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

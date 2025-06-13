@@ -59,9 +59,10 @@ export default function Footer() {
               <item.icon className="h-6 w-6" aria-hidden="true" />
             </Link>
           ))}
-        </div>
-        <p className="mt-10 text-center text-xs leading-5 text-gray-500">
+        </div>        <p className="mt-10 text-center text-xs leading-5 text-gray-500">
           &copy; {new Date().getFullYear()} FisioSalut. Todos los derechos reservados.
+          <span className="mx-2">|</span>
+          <Link href="/admin" className="hover:text-gray-700">Panel</Link>
         </p>
       </div>
     </footer>

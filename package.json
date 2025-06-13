@@ -7,19 +7,20 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
-  },
-  "dependencies": {
+  },  "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^5.10.2",
     "framer-motion": "^12.17.3",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-intersection-observer": "^9.16.0",
+    "react-hook-form": "^7.49.3",
     "sharp": "^0.34.2",
-    "tailwindcss-animate": "^1.0.7"
-  },
-  "devDependencies": {
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
+  },  "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -27,7 +28,11 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "prisma": "^5.10.2",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }
