@@ -2,11 +2,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import { motion } from 'framer-motion';
+import { useTheme } from '@/components/ThemeProvider';
 
 const navigation = [
   { name: 'Inicio', href: '/' },
   { name: 'Servicios', href: '/servicios' },
+  { name: 'Agenda', href: '/agenda' },
   { name: 'Sobre Nosotros', href: '/sobre-nosotros' },
   { name: 'Contacto', href: '/contacto' },
 ];
