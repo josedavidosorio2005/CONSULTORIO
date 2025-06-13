@@ -27,6 +27,14 @@ FisioSalut es una aplicación web moderna para un centro de fisioterapia profesi
 - **Accesibilidad**: Cumple estándares WCAG
 - **Testing**: Jest y React Testing Library
 - **Performance**: Optimizado para Core Web Vitals
+- **🗓️ Google Calendar Integration**: Sincronización automática de citas
+
+### 🎨 Integración con Google Calendar
+- **Sincronización Automática**: Las citas se crean automáticamente en Google Calendar
+- **Horarios Reales**: Consulta de disponibilidad en tiempo real
+- **Notificaciones por Email**: Invitaciones automáticas a los pacientes
+- **Gestión Centralizada**: Todas las citas en un solo lugar
+- **Cancelación Automática**: Sincronización bidireccional
 
 ## 🚀 Tecnologías Utilizadas
 
@@ -214,6 +222,7 @@ npm run start
 - [x] Testing básico
 - [x] Gestión de errores
 - [x] WhatsApp integration
+- [x] Google Calendar integration
 
 ### 🔄 En desarrollo / Futuras mejoras
 - [ ] Base de datos para persistencia
@@ -253,6 +262,91 @@ DATABASE_URL=postgresql://...
 # Autenticación (futuro)
 NEXTAUTH_SECRET=your-secret-key
 ```
+
+## 🗓️ Configuración de Google Calendar
+
+### Prerequisitos
+1. Cuenta de Google con acceso a Google Calendar
+2. Proyecto en Google Cloud Console
+3. API de Google Calendar habilitada
+
+### Paso 1: Configurar Google Cloud Console
+
+1. Ve a [Google Cloud Console](https://console.cloud.google.com/)
+2. Crea un nuevo proyecto o selecciona uno existente
+3. Habilita la API de Google Calendar:
+   - Ve a "APIs & Services" > "Library"
+   - Busca "Google Calendar API"
+   - Haz clic en "Enable"
+
+### Paso 2: Crear Credenciales OAuth2
+
+1. Ve a "APIs & Services" > "Credentials"
+2. Haz clic en "Create Credentials" > "OAuth client ID"
+3. Selecciona "Web application"
+4. Configura:
+   - **Name**: FisioSalut Calendar Integration
+   - **Authorized redirect URIs**: 
+     - `http://localhost:3000/api/auth/google/callback` (desarrollo)
+     - `https://tudominio.com/api/auth/google/callback` (producción)
+
+### Paso 3: Configurar Variables de Entorno
+
+Copia `.env.example` a `.env.local` y configura:
+
+```bash
+# Google Calendar API
+GOOGLE_CLIENT_ID=tu_client_id_aquí
+GOOGLE_CLIENT_SECRET=tu_client_secret_aquí
+GOOGLE_REFRESH_TOKEN=se_obtiene_después_de_autorización
+GOOGLE_CALENDAR_ID=primary
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+```
+
+### Paso 4: Autorización Inicial
+
+1. Ejecuta la aplicación: `npm run dev`
+2. Ve a `http://localhost:3000/admin/calendar-setup`
+3. Haz clic en "Generar URL de Autorización"
+4. Sigue el proceso de autorización de Google
+5. Copia el refresh token obtenido a tu archivo `.env.local`
+
+### Paso 5: Verificar Integración
+
+1. Ve a la página de citas: `http://localhost:3000/cita`
+2. Selecciona una fecha en el calendario
+3. Los horarios disponibles se cargarán desde Google Calendar
+4. Reserva una cita de prueba
+5. Verifica que aparece en tu Google Calendar
+
+### 🔧 Funcionalidades de la Integración
+
+- **✅ Creación Automática**: Las citas se crean automáticamente en Google Calendar
+- **✅ Consulta de Disponibilidad**: Horarios libres consultados en tiempo real
+- **✅ Invitaciones por Email**: Los pacientes reciben invitaciones automáticamente
+- **✅ Sincronización Bidireccional**: Cambios en Google Calendar se reflejan en la app
+- **✅ Zona Horaria**: Configurada para España (Europe/Madrid)
+
+### 🚨 Solución de Problemas
+
+**Error: "Invalid credentials"**
+- Verifica que GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET sean correctos
+- Asegúrate de que el redirect URI coincida exactamente
+
+**Error: "Calendar not accessible"**
+- Verifica que GOOGLE_CALENDAR_ID sea correcto (usa 'primary' para el calendario principal)
+- Comprueba que el refresh token sea válido
+
+**Error: "Quota exceeded"**
+- Google Calendar API tiene límites de uso
+- Para producción, considera solicitar aumento de cuota
+
+### 📝 Notas Importantes
+
+- El refresh token es permanente hasta que sea revocado
+- Guarda el refresh token de forma segura
+- Para producción, usa variables de entorno del servidor
+- Puedes usar calendarios específicos cambiando GOOGLE_CALENDAR_ID
 
 ## 🤝 Contribución
 
