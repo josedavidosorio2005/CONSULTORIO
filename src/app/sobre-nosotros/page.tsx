@@ -10,10 +10,9 @@ export default function SobreNosotrosPage() {
         </div>
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:mx-0 lg:mt-10 lg:max-w-none lg:grid-cols-12">
           <div className="relative lg:order-last lg:col-span-5">
-            <figure className="border-l border-blue-600 pl-8">
-              <blockquote className="text-xl font-semibold leading-8 tracking-tight text-gray-900">
+            <figure className="border-l border-blue-600 pl-8">              <blockquote className="text-xl font-semibold leading-8 tracking-tight text-gray-900">
                 <p>
-                  "Nuestro compromiso es mejorar la calidad de vida de nuestros pacientes a través de tratamientos personalizados y atención integral."
+                  &ldquo;Nuestro compromiso es mejorar la calidad de vida de nuestros pacientes a través de tratamientos personalizados y atención integral.&rdquo;
                 </p>
               </blockquote>
               <figcaption className="mt-8 flex gap-x-4">

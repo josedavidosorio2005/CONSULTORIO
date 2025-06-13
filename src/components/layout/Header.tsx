@@ -3,7 +3,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Dialog } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
 import { useTheme } from '@/components/ThemeProvider';
 
 const navigation = [
@@ -16,6 +15,7 @@ const navigation = [
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="bg-white">
@@ -45,8 +45,18 @@ export default function Header() {
               {item.name}
             </Link>
           ))}
-        </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        </div>        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:items-center lg:gap-4">
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            aria-label="Cambiar tema"
+          >
+            {theme === 'light' ? (
+              <MoonIcon className="h-5 w-5 text-gray-600" />
+            ) : (
+              <SunIcon className="h-5 w-5 text-gray-400" />
+            )}
+          </button>
           <Link
             href="/cita"
             className="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"

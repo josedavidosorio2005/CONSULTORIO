@@ -15,12 +15,10 @@ interface DaySchedule {
 
 export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  
-  // Generar horarios disponibles de ejemplo (esto se conectaría con una base de datos real)
-  const generateTimeSlots = (date: Date): TimeSlot[] => {
-    const slots: TimeSlot[] = [];
-    for (let hour = 9; hour < 20; hour++) {
-      for (let minute of [0, 30]) {
+    // Generar horarios disponibles de ejemplo (esto se conectaría con una base de datos real)
+  const generateTimeSlots = (): TimeSlot[] => {
+    const slots: TimeSlot[] = [];    for (let hour = 9; hour < 20; hour++) {
+      for (const minute of [0, 30]) {
         // Simular disponibilidad aleatoria
         const available = Math.random() > 0.3;
         slots.push({
@@ -42,10 +40,9 @@ export default function Calendar() {
       date.setDate(today.getDate() + i);
       
       // No generar horarios para domingos
-      if (date.getDay() !== 0) {
-        calendar.push({
+      if (date.getDay() !== 0) {        calendar.push({
           date: new Date(date),
-          slots: generateTimeSlots(date)
+          slots: generateTimeSlots()
         });
       }
     }
@@ -69,13 +66,12 @@ export default function Calendar() {
           className="bg-white/10 backdrop-blur-lg p-6 rounded-lg shadow-xl"
         >
           <h3 className="text-xl font-semibold mb-4">Selecciona un Día</h3>
-          <div className="grid grid-cols-7 gap-2">
-            {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day) => (
+          <div className="grid grid-cols-7 gap-2">            {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day) => (
               <div key={day} className="text-center font-medium p-2">
                 {day}
               </div>
             ))}
-            {calendar.map((day, index) => (
+            {calendar.map((day) => (
               <motion.button
                 key={day.date.toISOString()}
                 whileHover={{ scale: 1.05 }}
@@ -112,9 +108,8 @@ export default function Calendar() {
               : 'Selecciona un día para ver los horarios disponibles'}
           </h3>
           
-          {selectedSlots && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {selectedSlots.slots.map((slot, index) => (
+          {selectedSlots && (            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {selectedSlots.slots.map((slot) => (
                 <motion.button
                   key={slot.time}
                   whileHover={{ scale: 1.05 }}
@@ -124,9 +119,8 @@ export default function Calendar() {
                       ? 'bg-green-500/20 hover:bg-green-500/30 cursor-pointer'
                       : 'bg-red-500/20 cursor-not-allowed opacity-50'
                   }`}
-                  disabled={!slot.available}
-                  onClick={() => {
-                    if (slot.available) {
+                  disabled={!slot.available}                  onClick={() => {
+                    if (slot.available && selectedDate) {
                       // Aquí iría la lógica para reservar la cita
                       alert(`Cita seleccionada para el ${selectedDate.toLocaleDateString()} a las ${slot.time}`);
                     }
